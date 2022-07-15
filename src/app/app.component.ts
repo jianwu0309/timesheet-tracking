@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import * as moment from 'moment';
+import { Router } from '@angular/router';
+import { Chart } from 'angular-highcharts';
+import { AppService } from './app.service';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -12,6 +14,7 @@ export class AppComponent implements OnInit {
     '1-2',
     '2-3',
     '3-4',
+    '4-5',
     '5-6',
     '6-7',
     '7-8',
@@ -172,24 +175,101 @@ export class AppComponent implements OnInit {
     },
   ]
   timesheetForm: FormGroup;
+  records: any[] = [];
+  timezoneHashMap: any = {};
+  isLoading: boolean = false;
+  noRecords: boolean = false;
+  chart: any;
+  totalRecords = 0;
+  minShowingRecords = 0;
+  maxShowingRecords = 0;
+  filter = {
+    limit: 20,
+    offset: 0,
+    pageNo: 0,
+  };
 
-  constructor() {
+  constructor(private appService: AppService, private router: Router) {
     this.timesheetForm = this.initializeForm();
-    this.timesheetForm.controls['clientTime'].disable({ onlySelf: true });
-    this.timesheetForm.controls['agencyTime'].disable({ onlySelf: true });
+    this.timesheetForm.controls['clientTime'].disable({ onlySelf: false });
+    this.timesheetForm.controls['agencyTime'].disable({ onlySelf: false });
   }
 
   ngOnInit(): void {
+    for (const zone of this.timezones) {
+      this.timezoneHashMap[zone.id] = zone.value;
+    }
+    this.getRecords();
+    this.getRecordStats();
   }
 
   initializeForm() {
     return new FormGroup({
+      id: new FormControl(),
       developerTime: new FormControl(''),
       developerTimezone: new FormControl(''),
       clientTime: new FormControl(''),
       clientTimezone: new FormControl(''),
       agencyTime: new FormControl(''),
-      agencyTimezone: new FormControl(''),
+      agencyTimezone: new FormControl(10),
+    });
+  }
+
+  reset() {
+    this.timesheetForm.setValue({
+      id: null,
+      developerTime: '',
+      developerTimezone: '',
+      clientTime: '',
+      clientTimezone: '',
+      agencyTime: '',
+      agencyTimezone: 10
+    })
+  }
+
+  getRecords() {
+    this.isLoading = true;
+    this.appService.getRecords().subscribe((data: any) => {
+      this.records = data.data;
+      this.isLoading = false;
+      this.noRecords = !this.records.length;
+    });
+  }
+
+  resetPaging() {
+    this.filter.pageNo = 0;
+    this.filter.offset = 0;
+  }
+
+  next() {
+    this.filter.pageNo += 1;
+    this.filter.offset = this.filter.limit * this.filter.pageNo;
+    this.getRecords();
+  }
+
+  previous() {
+    this.filter.pageNo -= 1;
+    this.filter.offset = this.filter.limit * this.filter.pageNo;
+    this.getRecords();
+  }
+
+  setMaxShowingRecords() {
+    this.minShowingRecords = this.totalRecords ? (this.filter.pageNo * this.filter.limit) + 1 : 0;
+    const maxShowingRecords = (this.filter.pageNo + 1) * this.filter.limit;
+    this.maxShowingRecords = maxShowingRecords >= this.totalRecords ? this.totalRecords : maxShowingRecords;
+  }
+
+  applyFilter() {
+    this.filter.limit = 20;
+    this.filter.offset = 0;
+    this.getRecords();
+  }
+
+  getRecordStats() {
+    this.isLoading = true;
+    this.appService.getRecordStats().subscribe((data: any) => {
+      this.isLoading = false;
+      this.drawChart(data.data);
     });
   }
 
@@ -205,7 +285,11 @@ export class AppComponent implements OnInit {
       if (selectedTimeZone > 24) {
         selectedTimeZone = selectedTimeZone - 24;
       }
-      this.timesheetForm.controls['clientTime'].setValue(`${selectedTimeZone}-${selectedTimeZone+1}`);  
+      if (selectedTimeZone < 0) {
+        selectedTimeZone = developerTimeHour - selectedTimeZone;
+        selectedTimeZone = 24 - selectedTimeZone;
+      }
+      this.timesheetForm.controls['clientTime'].setValue(`${selectedTimeZone}-${selectedTimeZone < 24 ? selectedTimeZone+1 : 1}`);  
     }
     
     const agencyTimeZone = this.timesheetForm.controls['agencyTimezone'].value;
@@ -215,7 +299,85 @@ export class AppComponent implements OnInit {
       if (selectedTimeZoneAgency > 24) {
         selectedTimeZoneAgency = selectedTimeZoneAgency - 24;
       }
-      this.timesheetForm.controls['agencyTime'].setValue(`${selectedTimeZoneAgency}-${selectedTimeZoneAgency+1}`);
+      if (selectedTimeZoneAgency < 0) {
+        selectedTimeZoneAgency = developerTimeHour - selectedTimeZoneAgency;
+        selectedTimeZoneAgency = 24 - selectedTimeZoneAgency;
+      }
+      this.timesheetForm.controls['agencyTime'].setValue(`${selectedTimeZoneAgency}-${selectedTimeZoneAgency < 24 ? selectedTimeZoneAgency+1 : 1}`);
     }
+  }
+
+  editRecord(record: any) {
+    this.timesheetForm.setValue({
+      id: record.id,
+      developerTime: record.developerTime,
+      developerTimezone: record.developerTimezone,
+      clientTime: record.clientTime,
+      clientTimezone: record.clientTimezone,
+      agencyTime: record.agencyTime,
+      agencyTimezone: record.agencyTimezone
+    });
+  }
+
+  saveRecord() {
+    this.isLoading = true;
+    const payload = {
+      ...this.timesheetForm.value,
+      id: this.timesheetForm.controls['id'].value,
+      clientTime: this.timesheetForm.controls['clientTime'].value,
+      agencyTime: this.timesheetForm.controls['agencyTime'].value,
+    };
+    this.appService.saveRecord(payload).subscribe(() => {
+      this.isLoading = false;
+      this.getRecords();
+      this.getRecordStats();
+      this.reset();
+    });
+  }
+
+  deleteRecord(id: number) {
+    if(confirm('Are you sure to delete the record?')) {
+      this.isLoading = true;
+      this.appService.deleteRecord(id).subscribe(() => {
+        this.isLoading = false;
+        this.getRecords();
+        this.getRecordStats();
+      });
+    }
+  }
+
+  drawChart(data: any) {
+    this.chart = new Chart({
+        chart: {
+          type: 'column'
+        },
+        title: {
+          text: 'Stats'
+        },
+        credits: {
+          enabled: false
+        },
+        xAxis: {
+          categories: data.map((d: any) => d.time),
+          title: {
+              text: null
+          }
+        },
+        yAxis: {
+            min: 0,
+            allowDecimals: false,
+            title: {
+                text: ''
+            },
+            labels: {
+                overflow: 'justify'
+            }
+        },
+        series: [{
+            name: 'Number',
+            type: 'column',
+            data: data.map((d: any) => +d.count)
+        }]
+      });
   }
 }

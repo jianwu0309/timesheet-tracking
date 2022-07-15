@@ -356,17 +356,16 @@
         <table class="table">
           <thead>
             <tr>
-              <th scope="col">#</th>
               <th scope="col" colspan="2">Developer</th>
               <th scope="col" colspan="2">Client</th>
               <th scope="col" colspan="2">Me</th>
+              <th></th>
             </tr>
           </thead>
           <tbody>
             <tr>
-              <th scope="row">1</th>
               <td class="col-md-2">
-                <select class="form-select" formControlName="developerTime" aria-label="Default select example">
+                <select class="form-select" formControlName="developerTime" (change)="selectTimezone()" aria-label="Default select example">
                   <option selected value="" disabled="true">Time</option>
                   <option value="{{time}}" *ngFor="let time of times">{{time}}</option>
                 </select>
@@ -401,10 +400,94 @@
                   <option value="{{zone.id}}" *ngFor="let zone of timezones">{{zone.value}}</option>
                 </select>
               </td>
+              <td><button class="btn btn-success" [disabled]="isLoading" (click)="saveRecord()">Save</button></td>
             </tr>
           </tbody>
         </table>
       </form>
+    </div>
+  </div>
+
+  <div class="spinner-border" role="status" *ngIf="isLoading">
+    <span class="sr-only"></span>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12">
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col"></th>
+            <th scope="col" colspan="2">Developer</th>
+            <th scope="col" colspan="2">Client</th>
+            <th scope="col" colspan="2">Me</th>
+            <th scope="col"></th>
+          </tr>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Developer Time</th>
+            <th scope="col">Developer Time Zone</th>
+            <th scope="col">Client Time</th>
+            <th scope="col">Client Time Zone</th>
+            <th scope="col">My Time</th>
+            <th scope="col">My Time Zone</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngIf="noRecords">
+            <td colspan="7" class="text-center"><label>No Record Found</label></td>
+          </tr>
+          <tr *ngFor="let record of records; let i = index">
+            <th scope="row">{{ i + 1 }}</th>
+            <td class="col-md-2">
+              {{record.developerTime}}
+            </td>
+            <td class="col-md-2">
+              {{timezoneHashMap[record.developerTimezone]}}
+            </td>
+            <td class="col-md-2">
+              {{record.clientTime}}
+            </td>
+            <td class="col-md-2">
+              {{timezoneHashMap[record.clientTimezone]}}
+            </td>
+            <td class="col-md-2">
+              {{record.agencyTime}}
+            </td>
+            <td class="col-md-2">
+              {{timezoneHashMap[record.agencyTimezone]}}
+            </td>
+            <td>
+              <button class="btn" title="Edit" [disabled]="isLoading" (click)="editRecord(record)">
+                <svg  enable-background="new 0 0 19 19" height="19px" id="Layer_1" version="1.1" viewBox="0 0 19 19" width="19px" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><g><path d="M8.44,7.25C8.348,7.342,8.277,7.447,8.215,7.557L8.174,7.516L8.149,7.69   C8.049,7.925,8.014,8.183,8.042,8.442l-0.399,2.796l2.797-0.399c0.259,0.028,0.517-0.007,0.752-0.107l0.174-0.024l-0.041-0.041   c0.109-0.062,0.215-0.133,0.307-0.225l5.053-5.053l-3.191-3.191L8.44,7.25z" fill="#231F20"/><path d="M18.183,1.568l-0.87-0.87c-0.641-0.641-1.637-0.684-2.225-0.097l-0.797,0.797l3.191,3.191l0.797-0.798   C18.867,3.205,18.824,2.209,18.183,1.568z" fill="#231F20"/><path d="M15,9.696V17H2V2h8.953l1.523-1.42c0.162-0.161,0.353-0.221,0.555-0.293   c0.043-0.119,0.104-0.18,0.176-0.287H0v19h17V7.928L15,9.696z" fill="#231F20"/></g></svg>
+              </button>
+              <button class="btn" [disabled]="isLoading" (click)="deleteRecord(record.id)">
+                <svg width="25px" title="Delete" height="25px" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><title>Delete</title><rect x="32" y="48" width="448" height="80" rx="32" ry="32"/><path d="M74.45,160a8,8,0,0,0-8,8.83L92.76,421.39a1.5,1.5,0,0,0,0,.22A48,48,0,0,0,140.45,464H371.54a48,48,0,0,0,47.67-42.39l0-.21,26.27-252.57a8,8,0,0,0-8-8.83ZM323.31,340.69a16,16,0,1,1-22.63,22.62L256,318.63l-44.69,44.68a16,16,0,0,1-22.63-22.62L233.37,296l-44.69-44.69a16,16,0,0,1,22.63-22.62L256,273.37l44.68-44.68a16,16,0,0,1,22.63,22.62L278.62,296Z"/></svg>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <!-- <nav>
+        <ul class="pagination float-right">
+            <li class="page-item">
+                <button class="page-link" (click)="previous()" [disabled]="filter.pageNo === 0">
+                  <i class="fa fa-angle-double-left" aria-hidden="true"></i>
+                </button>
+            </li>
+            <li class="page-item">
+                <button class="page-link" (click)="next()" [disabled]="totalRecords / filter.limit <= filter.pageNo + 1">
+                  <i class="fa fa-angle-double-right" aria-hidden="true"></i>
+                </button>
+            </li>
+        </ul>
+      </nav> -->
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12">
+      <div [chart]="chart"></div>
     </div>
   </div>
   
