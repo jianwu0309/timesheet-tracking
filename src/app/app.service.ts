@@ -7,8 +7,8 @@ export class AppService {
     private baseUrl = environment.baseUrl;
     constructor(private http: HttpClient) {}
 
-    getRecords() {
-        const url = `${this.baseUrl}/timesheet`;
+    getRecords(filter: any) {
+        const url = `${this.baseUrl}/timesheet?limit=${filter.limit}&offset=${filter.offset}`;
         return this.http.get(url);
     }
 

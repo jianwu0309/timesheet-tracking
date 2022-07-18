@@ -188,6 +188,7 @@ export class AppComponent implements OnInit {
     offset: 0,
     pageNo: 0,
   };
+  enableNextPage: boolean = true;
 
   constructor(private appService: AppService, private router: Router) {
     this.timesheetForm = this.initializeForm();
@@ -229,8 +230,9 @@ export class AppComponent implements OnInit {
 
   getRecords() {
     this.isLoading = true;
-    this.appService.getRecords().subscribe((data: any) => {
-      this.records = data.data;
+    this.appService.getRecords(this.filter).subscribe((data: any) => {
+      this.totalRecords = data.data.total;
+      this.records = data.data.records;
       this.isLoading = false;
       this.noRecords = !this.records.length;
     });
