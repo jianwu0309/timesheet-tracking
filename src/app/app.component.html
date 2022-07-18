@@ -325,173 +325,196 @@
       <path id="Path_40" data-name="Path 40" d="M644.6,141S143.02,215.537,147.049,870.207s342.774,201.755,342.774,201.755S404.659,847.213,388.815,762.2c-27.116-145.51-11.551-384.124,271.9-609.1C671.15,139.365,644.6,141,644.6,141Z" transform="translate(-147.025 -140.939)" fill="#f5f5f5"/>
     </svg>
 
-  </div>
-
-  <div class="row">
-    <div class="col-md-12">
-      <form [formGroup]="timesheetForm">
-        <table class="table">
-          <thead>
-            <tr>
-              <th scope="col" colspan="2">Developer</th>
-              <th scope="col" colspan="2">Client</th>
-              <th scope="col" colspan="2">Me</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td class="col-md-2">
-                <select class="form-select" formControlName="developerTime" (change)="selectTimezone()" aria-label="Default select example">
-                  <option selected value="" disabled="true">Time</option>
-                  <option value="{{time}}" *ngFor="let time of times">{{time}}</option>
-                </select>
-              </td>
-              <td class="col-md-2">
-                <select class="form-select" formControlName="developerTimezone" (change)="selectTimezone()" aria-label="Default select example">
-                  <option selected value="" disabled="true">Timezone</option>
-                  <option value="{{zone.id}}" *ngFor="let zone of timezones">{{zone.value}}</option>
-                </select>
-              </td>
-              <td class="col-md-2">
-                <select class="form-select" formControlName="clientTime" aria-label="Default select example">
-                  <option selected value="" disabled="true">Time</option>
-                  <option value="{{time}}" *ngFor="let time of times">{{time}}</option>
-                </select>
-              </td>
-              <td class="col-md-2">
-                <select class="form-select" formControlName="clientTimezone" (change)="selectTimezone()" aria-label="Default select example">
-                  <option selected value="" disabled="true">Timezone</option>
-                  <option value="{{zone.id}}" *ngFor="let zone of timezones">{{zone.value}}</option>
-                </select>
-              </td>
-              <td class="col-md-2">
-                <select class="form-select" formControlName="agencyTime" aria-label="Default select example">
-                  <option selected value="" disabled="true">Time</option>
-                  <option value="{{time}}" *ngFor="let time of times">{{time}}</option>
-                </select>
-              </td>
-              <td class="col-md-2">
-                <select class="form-select" formControlName="agencyTimezone" (change)="selectTimezone()" aria-label="Default select example">
-                  <option selected value="" disabled="true">Timezone</option>
-                  <option value="{{zone.id}}" *ngFor="let zone of timezones">{{zone.value}}</option>
-                </select>
-              </td>
-              <td><button class="btn btn-success" [disabled]="isLoading" [disabled]="!timesheetForm.controls['developerTimezone']?.value || !timesheetForm.controls['agencyTimezone']?.value" (click)="saveRecord()">Save</button></td>
-            </tr>
-          </tbody>
-        </table>
-      </form>
+    <div class="spinner-border" role="status" *ngIf="isLoading">
+      <span class="sr-only"></span>
     </div>
-  </div>
-
-  <div class="spinner-border" role="status" *ngIf="isLoading">
-    <span class="sr-only"></span>
-  </div>
-
-  <div class="row">
-    <div class="col-md-12">
-      <table class="table">
-        <thead>
-          <tr>
-            <th scope="col"></th>
-            <th scope="col" colspan="2">Developer</th>
-            <th scope="col" colspan="2">Client</th>
-            <th scope="col" colspan="2">Me</th>
-            <th scope="col">
-              <!-- <select class="form-select" [(ngModel)]="filter.limit" aria-label="Default select example">
-                <option selected value="20">Show 20 Records</option>
-                <option value="50">Show 50 Records</option>
-                <option value="100">Show 100 Records</option>
-              </select> -->
-            </th>
-          </tr>
-          <tr>
-            <th scope="col">#</th>
-            <th scope="col">Developer Time</th>
-            <th scope="col">Developer Time Zone</th>
-            <th scope="col">Client Time</th>
-            <th scope="col">Client Time Zone</th>
-            <th scope="col">My Time</th>
-            <th scope="col">My Time Zone</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngIf="noRecords">
-            <td colspan="7" class="text-center"><label>No Record Found</label></td>
-          </tr>
-          <tr *ngFor="let record of records; let i = index">
-            <th scope="row">{{ (i + (filter.pageNo * filter.limit)) + 1 }}</th>
-            <td class="col-md-2">
-              {{record.developerTime}}
-            </td>
-            <td class="col-md-2">
-              {{timezoneHashMap[record.developerTimezone]}}
-            </td>
-            <td class="col-md-2">
-              {{record.clientTime}}
-            </td>
-            <td class="col-md-2">
-              {{timezoneHashMap[record.clientTimezone]}}
-            </td>
-            <td class="col-md-2">
-              {{record.agencyTime}}
-            </td>
-            <td class="col-md-2">
-              {{timezoneHashMap[record.agencyTimezone]}}
-            </td>
-            <td>
-              <button class="btn" title="Edit" [disabled]="isLoading" (click)="editRecord(record)">
-                <svg  enable-background="new 0 0 19 19" height="19px" id="Layer_1" version="1.1" viewBox="0 0 19 19" width="19px" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><g><path d="M8.44,7.25C8.348,7.342,8.277,7.447,8.215,7.557L8.174,7.516L8.149,7.69   C8.049,7.925,8.014,8.183,8.042,8.442l-0.399,2.796l2.797-0.399c0.259,0.028,0.517-0.007,0.752-0.107l0.174-0.024l-0.041-0.041   c0.109-0.062,0.215-0.133,0.307-0.225l5.053-5.053l-3.191-3.191L8.44,7.25z" fill="#231F20"/><path d="M18.183,1.568l-0.87-0.87c-0.641-0.641-1.637-0.684-2.225-0.097l-0.797,0.797l3.191,3.191l0.797-0.798   C18.867,3.205,18.824,2.209,18.183,1.568z" fill="#231F20"/><path d="M15,9.696V17H2V2h8.953l1.523-1.42c0.162-0.161,0.353-0.221,0.555-0.293   c0.043-0.119,0.104-0.18,0.176-0.287H0v19h17V7.928L15,9.696z" fill="#231F20"/></g></svg>
-              </button>
-              <button class="btn" [disabled]="isLoading" (click)="deleteRecord(record.id)">
-                <svg width="25px" title="Delete" height="25px" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><title>Delete</title><rect x="32" y="48" width="448" height="80" rx="32" ry="32"/><path d="M74.45,160a8,8,0,0,0-8,8.83L92.76,421.39a1.5,1.5,0,0,0,0,.22A48,48,0,0,0,140.45,464H371.54a48,48,0,0,0,47.67-42.39l0-.21,26.27-252.57a8,8,0,0,0-8-8.83ZM323.31,340.69a16,16,0,1,1-22.63,22.62L256,318.63l-44.69,44.68a16,16,0,0,1-22.63-22.62L233.37,296l-44.69-44.69a16,16,0,0,1,22.63-22.62L256,273.37l44.68-44.68a16,16,0,0,1,22.63,22.62L278.62,296Z"/></svg>
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      <nav>
-        <ul class="pagination" *ngIf="records.length">
-            <li class="page-item">
-                <button class="page-link" (click)="previous()" [disabled]="filter.pageNo === 0">
-                  <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="19" height="19" viewBox="0 0 256 256" xml:space="preserve">
-                    <desc>Previous</desc>
-                    <defs>
-                    </defs>
-                    <g transform="translate(128 128) scale(0.72 0.72)">
-                      <g style="stroke: none; stroke-width: 0; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: none; fill-rule: nonzero; opacity: 1;" transform="translate(-175.05 -175.05000000000004) scale(3.89 3.89)" >
-                      <path d="M 65.75 90 c 0.896 0 1.792 -0.342 2.475 -1.025 c 1.367 -1.366 1.367 -3.583 0 -4.949 L 29.2 45 L 68.225 5.975 c 1.367 -1.367 1.367 -3.583 0 -4.95 c -1.367 -1.366 -3.583 -1.366 -4.95 0 l -41.5 41.5 c -1.367 1.366 -1.367 3.583 0 4.949 l 41.5 41.5 C 63.958 89.658 64.854 90 65.75 90 z" style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: rgb(0,0,0); fill-rule: nonzero; opacity: 1;" transform=" matrix(1 0 0 1 0 0) " stroke-linecap="round" />
-                    </g>
-                    </g>
-                    </svg>
-                </button>
-            </li>
-            <li class="page-item">
-                <button class="page-link" (click)="next()" [disabled]="(totalRecords / +filter.limit) <= filter.pageNo + 1">
-                  <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="19" height="19" viewBox="0 0 256 256" xml:space="preserve">
-                    <desc>Next</desc>
-                    <defs>
-                    </defs>
-                    <g transform="translate(128 128) scale(0.72 0.72)">
-                      <g style="stroke: none; stroke-width: 0; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: none; fill-rule: nonzero; opacity: 1;" transform="translate(-175.05 -175.05000000000004) scale(3.89 3.89)" >
-                      <path d="M 24.25 90 c -0.896 0 -1.792 -0.342 -2.475 -1.025 c -1.367 -1.366 -1.367 -3.583 0 -4.949 L 60.8 45 L 21.775 5.975 c -1.367 -1.367 -1.367 -3.583 0 -4.95 c 1.367 -1.366 3.583 -1.366 4.95 0 l 41.5 41.5 c 1.367 1.366 1.367 3.583 0 4.949 l -41.5 41.5 C 26.042 89.658 25.146 90 24.25 90 z" style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: rgb(0,0,0); fill-rule: nonzero; opacity: 1;" transform=" matrix(1 0 0 1 0 0) " stroke-linecap="round" />
-                    </g>
-                    </g>
-                  </svg>                
-                </button>
-            </li>
-        </ul>
-      </nav>
-    </div>
-  </div>
-
-  <div class="row">
-    <div class="col-md-12">
-      <div [chart]="chart"></div>
-    </div>
-  </div>
   
+  </div>
+
+  <ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-tabs" (navChange)="navChange($event)">
+    <li [ngbNavItem]="1">
+      <a ngbNavLink>Data</a>
+      <ng-template ngbNavContent>
+        <div class="row">
+          <div class="col-md-12">
+            <form [formGroup]="timesheetForm">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th scope="col" colspan="2">Developer</th>
+                    <th scope="col" colspan="3">Client</th>
+                    <th scope="col" colspan="2">Me</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="col-md-2">
+                      <select class="form-select" formControlName="developerTime" (change)="selectTimezone()" aria-label="Default select example">
+                        <option selected value="" disabled="true">Time</option>
+                        <option value="{{time}}" *ngFor="let time of times">{{time}}</option>
+                      </select>
+                    </td>
+                    <td class="col-md-2">
+                      <select class="form-select" formControlName="developerTimezone" (change)="selectTimezone()" aria-label="Default select example">
+                        <option selected value="" disabled="true">Timezone</option>
+                        <option value="{{zone.id}}" *ngFor="let zone of timezones">{{zone.value}}</option>
+                      </select>
+                    </td>
+                    <td class="col-md-2">
+                      <select class="form-select" formControlName="clientTime" aria-label="Default select example">
+                        <option selected value="" disabled="true">Time</option>
+                        <option value="{{time}}" *ngFor="let time of times">{{time}}</option>
+                      </select>
+                    </td>
+                    <td class="col-md-2">
+                      <select class="form-select" formControlName="country" aria-label="Default select example">
+                        <option selected value="" disabled="true">Country</option>
+                        <option value="{{country}}" *ngFor="let country of countries">{{country}}</option>
+                      </select>
+                    </td>
+                    <td class="col-md-2">
+                      <select class="form-select" formControlName="clientTimezone" (change)="selectTimezone()" aria-label="Default select example">
+                        <option selected value="" disabled="true">Timezone</option>
+                        <option value="{{zone.id}}" *ngFor="let zone of timezones">{{zone.value}}</option>
+                      </select>
+                    </td>
+                    <td class="col-md-2">
+                      <select class="form-select" formControlName="agencyTime" aria-label="Default select example">
+                        <option selected value="" disabled="true">Time</option>
+                        <option value="{{time}}" *ngFor="let time of times">{{time}}</option>
+                      </select>
+                    </td>
+                    <td class="col-md-2">
+                      <select class="form-select" formControlName="agencyTimezone" (change)="selectTimezone()" aria-label="Default select example">
+                        <option selected value="" disabled="true">Timezone</option>
+                        <option value="{{zone.id}}" *ngFor="let zone of timezones">{{zone.value}}</option>
+                      </select>
+                    </td>
+                    <td><button class="btn btn-success" [disabled]="isLoading || !timesheetForm.controls['developerTime']?.value || !timesheetForm.controls['developerTimezone']?.value || !timesheetForm.controls['agencyTimezone']?.value" [disabled]="" (click)="saveRecord()">Save</button></td>
+                  </tr>
+                </tbody>
+              </table>
+            </form>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-12">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th scope="col"></th>
+                  <th scope="col" colspan="2">Developer</th>
+                  <th scope="col" colspan="2">Client</th>
+                  <th scope="col" colspan="2">Me</th>
+                  <th scope="col">
+                    <!-- <select class="form-select" [(ngModel)]="filter.limit" aria-label="Default select example">
+                      <option selected value="20">Show 20 Records</option>
+                      <option value="50">Show 50 Records</option>
+                      <option value="100">Show 100 Records</option>
+                    </select> -->
+                  </th>
+                </tr>
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">Developer Time</th>
+                  <th scope="col">Developer Time Zone</th>
+                  <th scope="col">Client Time</th>
+                  <th scope="col">Client Country</th>
+                  <th scope="col">Client Time Zone</th>
+                  <th scope="col">My Time</th>
+                  <th scope="col">My Time Zone</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngIf="noRecords">
+                  <td colspan="7" class="text-center"><label>No Record Found</label></td>
+                </tr>
+                <tr *ngFor="let record of records; let i = index">
+                  <th scope="row">{{ (i + (filter.pageNo * filter.limit)) + 1 }}</th>
+                  <td class="col-md-2">
+                    {{record.developerTime}}
+                  </td>
+                  <td class="col-md-2">
+                    {{timezoneHashMap[record.developerTimezone]}}
+                  </td>
+                  <td class="col-md-2">
+                    {{record.clientTime}}
+                  </td>
+                  <td class="col-md-2">
+                    {{record.country}}
+                  </td>
+                  <td class="col-md-2">
+                    {{timezoneHashMap[record.clientTimezone]}}
+                  </td>
+                  <td class="col-md-2">
+                    {{record.agencyTime}}
+                  </td>
+                  <td class="col-md-2">
+                    {{timezoneHashMap[record.agencyTimezone]}}
+                  </td>
+                  <td>
+                    <button class="btn" title="Edit" [disabled]="isLoading" (click)="editRecord(record)">
+                      <svg  enable-background="new 0 0 19 19" height="19px" id="Layer_1" version="1.1" viewBox="0 0 19 19" width="19px" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><g><path d="M8.44,7.25C8.348,7.342,8.277,7.447,8.215,7.557L8.174,7.516L8.149,7.69   C8.049,7.925,8.014,8.183,8.042,8.442l-0.399,2.796l2.797-0.399c0.259,0.028,0.517-0.007,0.752-0.107l0.174-0.024l-0.041-0.041   c0.109-0.062,0.215-0.133,0.307-0.225l5.053-5.053l-3.191-3.191L8.44,7.25z" fill="#231F20"/><path d="M18.183,1.568l-0.87-0.87c-0.641-0.641-1.637-0.684-2.225-0.097l-0.797,0.797l3.191,3.191l0.797-0.798   C18.867,3.205,18.824,2.209,18.183,1.568z" fill="#231F20"/><path d="M15,9.696V17H2V2h8.953l1.523-1.42c0.162-0.161,0.353-0.221,0.555-0.293   c0.043-0.119,0.104-0.18,0.176-0.287H0v19h17V7.928L15,9.696z" fill="#231F20"/></g></svg>
+                    </button>
+                    <button class="btn" [disabled]="isLoading" (click)="deleteRecord(record.id)">
+                      <svg width="25px" title="Delete" height="25px" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><title>Delete</title><rect x="32" y="48" width="448" height="80" rx="32" ry="32"/><path d="M74.45,160a8,8,0,0,0-8,8.83L92.76,421.39a1.5,1.5,0,0,0,0,.22A48,48,0,0,0,140.45,464H371.54a48,48,0,0,0,47.67-42.39l0-.21,26.27-252.57a8,8,0,0,0-8-8.83ZM323.31,340.69a16,16,0,1,1-22.63,22.62L256,318.63l-44.69,44.68a16,16,0,0,1-22.63-22.62L233.37,296l-44.69-44.69a16,16,0,0,1,22.63-22.62L256,273.37l44.68-44.68a16,16,0,0,1,22.63,22.62L278.62,296Z"/></svg>
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <nav>
+              <ul class="pagination" *ngIf="records.length">
+                  <li class="page-item">
+                      <button class="page-link" (click)="previous()" [disabled]="filter.pageNo === 0">
+                        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="19" height="19" viewBox="0 0 256 256" xml:space="preserve">
+                          <desc>Previous</desc>
+                          <defs>
+                          </defs>
+                          <g transform="translate(128 128) scale(0.72 0.72)">
+                            <g style="stroke: none; stroke-width: 0; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: none; fill-rule: nonzero; opacity: 1;" transform="translate(-175.05 -175.05000000000004) scale(3.89 3.89)" >
+                            <path d="M 65.75 90 c 0.896 0 1.792 -0.342 2.475 -1.025 c 1.367 -1.366 1.367 -3.583 0 -4.949 L 29.2 45 L 68.225 5.975 c 1.367 -1.367 1.367 -3.583 0 -4.95 c -1.367 -1.366 -3.583 -1.366 -4.95 0 l -41.5 41.5 c -1.367 1.366 -1.367 3.583 0 4.949 l 41.5 41.5 C 63.958 89.658 64.854 90 65.75 90 z" style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: rgb(0,0,0); fill-rule: nonzero; opacity: 1;" transform=" matrix(1 0 0 1 0 0) " stroke-linecap="round" />
+                          </g>
+                          </g>
+                          </svg>
+                      </button>
+                  </li>
+                  <li class="page-item">
+                      <button class="page-link" (click)="next()" [disabled]="(totalRecords / +filter.limit) <= filter.pageNo + 1">
+                        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="19" height="19" viewBox="0 0 256 256" xml:space="preserve">
+                          <desc>Next</desc>
+                          <defs>
+                          </defs>
+                          <g transform="translate(128 128) scale(0.72 0.72)">
+                            <g style="stroke: none; stroke-width: 0; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: none; fill-rule: nonzero; opacity: 1;" transform="translate(-175.05 -175.05000000000004) scale(3.89 3.89)" >
+                            <path d="M 24.25 90 c -0.896 0 -1.792 -0.342 -2.475 -1.025 c -1.367 -1.366 -1.367 -3.583 0 -4.949 L 60.8 45 L 21.775 5.975 c -1.367 -1.367 -1.367 -3.583 0 -4.95 c 1.367 -1.366 3.583 -1.366 4.95 0 l 41.5 41.5 c 1.367 1.366 1.367 3.583 0 4.949 l -41.5 41.5 C 26.042 89.658 25.146 90 24.25 90 z" style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: rgb(0,0,0); fill-rule: nonzero; opacity: 1;" transform=" matrix(1 0 0 1 0 0) " stroke-linecap="round" />
+                          </g>
+                          </g>
+                        </svg>                
+                      </button>
+                  </li>
+              </ul>
+            </nav>
+          </div>
+        </div>
+      </ng-template>
+    </li>
+    <li [ngbNavItem]="2">
+      <a ngbNavLink>Stats</a>
+      <ng-template ngbNavContent>
+        <div class="row">
+          <div class="col-md-12">
+            <div [chart]="chart"></div>
+          </div>
+        </div>
+      </ng-template>
+    </li>
+  </ul>
+  
+  <div [ngbNavOutlet]="nav" class="mt-2"></div>
+
   <svg id="clouds" xmlns="http://www.w3.org/2000/svg" width="2611.084" height="485.677" viewBox="0 0 2611.084 485.677">
     <title>Gray Clouds Background</title>
     <path id="Path_39" data-name="Path 39" d="M2379.709,863.793c10-93-77-171-168-149-52-114-225-105-264,15-75,3-140,59-152,133-30,2.83-66.725,9.829-93.5,26.25-26.771-16.421-63.5-23.42-93.5-26.25-12-74-77-130-152-133-39-120-212-129-264-15-54.084-13.075-106.753,9.173-138.488,48.9-31.734-39.726-84.4-61.974-138.487-48.9-52-114-225-105-264,15a162.027,162.027,0,0,0-103.147,43.044c-30.633-45.365-87.1-72.091-145.206-58.044-52-114-225-105-264,15-75,3-140,59-152,133-53,5-127,23-130,83-2,42,35,72,70,86,49,20,106,18,157,5a165.625,165.625,0,0,0,120,0c47,94,178,113,251,33,61.112,8.015,113.854-5.72,150.492-29.764a165.62,165.62,0,0,0,110.861-3.236c47,94,178,113,251,33,31.385,4.116,60.563,2.495,86.487-3.311,25.924,5.806,55.1,7.427,86.488,3.311,73,80,204,61,251-33a165.625,165.625,0,0,0,120,0c51,13,108,15,157-5a147.188,147.188,0,0,0,33.5-18.694,147.217,147.217,0,0,0,33.5,18.694c49,20,106,18,157,5a165.625,165.625,0,0,0,120,0c47,94,178,113,251,33C2446.709,1093.793,2554.709,922.793,2379.709,863.793Z" transform="translate(142.69 -634.312)" fill="#eee"/>

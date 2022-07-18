@@ -174,6 +174,30 @@ export class AppComponent implements OnInit {
       "value": "(UTC+13:00) Pacific/Tongatapu"
     },
   ]
+  countries = [
+    'Australia',
+    'Belgium',
+    'Canada',
+    'China',
+    'Denmark',
+    'Finland',
+    'France',
+    'Germany',
+    'Hong Kong',
+    'Iceland',
+    'Ireland',
+    'Israel',
+    'Japan',
+    'Luxembourg',
+    'New Zealand',
+    'Norway',
+    'Saudi Arabia',
+    'Sweden',
+    'Switzerland',
+    'Taiwan',
+    'United Kingdom',
+    'United States',
+  ]
   timesheetForm: FormGroup;
   records: any[] = [];
   timezoneHashMap: any = {};
@@ -189,6 +213,7 @@ export class AppComponent implements OnInit {
     pageNo: 0,
   };
   enableNextPage: boolean = true;
+  active = 1;
 
   constructor(private appService: AppService, private router: Router) {
     this.timesheetForm = this.initializeForm();
@@ -213,6 +238,7 @@ export class AppComponent implements OnInit {
       clientTimezone: new FormControl(''),
       agencyTime: new FormControl(''),
       agencyTimezone: new FormControl(10),
+      country: new FormControl(''),
     });
   }
 
@@ -224,7 +250,8 @@ export class AppComponent implements OnInit {
       clientTime: '',
       clientTimezone: '',
       agencyTime: '',
-      agencyTimezone: 10
+      agencyTimezone: 10,
+      country: ''
     })
   }
 
@@ -317,7 +344,8 @@ export class AppComponent implements OnInit {
       clientTime: record.clientTime,
       clientTimezone: record.clientTimezone,
       agencyTime: record.agencyTime,
-      agencyTimezone: record.agencyTimezone
+      agencyTimezone: record.agencyTimezone,
+      country: record.country
     });
   }
 
@@ -383,6 +411,12 @@ export class AppComponent implements OnInit {
               enabled: true
             }
         }]
-      });
+    });
+  }
+
+  navChange(ev: any) {
+    if (ev.nextId === 2) {
+      // this.getRecordStats();
+    }
   }
 }
