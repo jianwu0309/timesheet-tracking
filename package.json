@@ -5,10 +5,9 @@
     "ng": "ng",
     "start": "node server.js",
     "start:local": "ng serve",
-    "build": "ng build",
+    "build": "ng build --aot",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test",
-    "postinstall": "ng build --aot"
+    "test": "ng test"
   },
   "engines": {
     "node": "16.15.1",

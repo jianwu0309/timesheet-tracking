@@ -376,9 +376,12 @@ export class AppComponent implements OnInit {
             }
         },
         series: [{
-            name: 'Number',
+            name: 'Timeslots',
             type: 'column',
-            data: data.map((d: any) => +d.count)
+            data: data.map((d: any) => +d.count),
+            dataLabels: {
+              enabled: true
+            }
         }]
       });
   }
