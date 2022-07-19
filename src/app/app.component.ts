@@ -174,30 +174,37 @@ export class AppComponent implements OnInit {
       "value": "(UTC+13:00) Pacific/Tongatapu"
     },
   ]
-  countries = [
-    'Australia',
-    'Belgium',
-    'Canada',
-    'China',
-    'Denmark',
-    'Finland',
-    'France',
-    'Germany',
-    'Hong Kong',
-    'Iceland',
-    'Ireland',
-    'Israel',
-    'Japan',
-    'Luxembourg',
-    'New Zealand',
-    'Norway',
-    'Saudi Arabia',
-    'Sweden',
-    'Switzerland',
-    'Taiwan',
-    'United Kingdom',
-    'United States',
-  ]
+  countries = {
+    america: [
+      'Canada',
+      'United States',
+    ],
+    asia_oceania: [
+      'Australia',
+      'China',
+      'Singapore',
+      'Hong Kong',
+      'Taiwan',
+      'Saudi Arabia',
+      'Japan',
+      'New Zealand',
+      'Israel'
+    ],
+    europe: [
+      'Norway',
+      'Belgium',
+      'United Kingdom',
+      'Denmark',
+      'Finland',
+      'France',
+      'Germany',
+      'Luxembourg',
+      'Sweden',
+      'Switzerland',
+      'Ireland',
+      'Iceland',
+    ]
+  }
   timesheetForm: FormGroup;
   records: any[] = [];
   timezoneHashMap: any = {};
