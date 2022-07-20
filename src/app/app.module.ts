@@ -3,8 +3,9 @@ import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
-import { NgbModule, NgbNavModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbNavModule } from '@ng-bootstrap/ng-bootstrap';
 import { ChartModule } from 'angular-highcharts';
+import { NgSelectModule } from '@ng-select/ng-select';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -22,7 +23,8 @@ import { AppService } from './app.service';
     ReactiveFormsModule,
     HttpClientModule,
     ChartModule,
-    NgbNavModule
+    NgbNavModule,
+    NgSelectModule
   ],
   providers: [AppService],
   bootstrap: [AppComponent]

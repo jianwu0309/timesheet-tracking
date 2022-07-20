@@ -12,8 +12,11 @@ export class AppService {
         return this.http.get(url);
     }
 
-    getRecordStats() {
-        const url = `${this.baseUrl}/timesheet/stats`;
+    getRecordStats(countries: string[]) {
+        let url = `${this.baseUrl}/timesheet/stats`;
+        if (countries.length) {
+            url += `?countries=${countries.join(',')}`;
+        }
         return this.http.get(url);
     }
 

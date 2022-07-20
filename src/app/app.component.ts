@@ -221,11 +221,14 @@ export class AppComponent implements OnInit {
   };
   enableNextPage: boolean = true;
   active = 1;
+  selectedCountries: string[] = [];
+  countriesFilter: any = [];
 
   constructor(private appService: AppService, private router: Router) {
     this.timesheetForm = this.initializeForm();
     this.timesheetForm.controls['clientTime'].disable({ onlySelf: false });
     this.timesheetForm.controls['agencyTime'].disable({ onlySelf: false });
+    this.setCountriesFilter();
   }
 
   ngOnInit(): void {
@@ -234,6 +237,18 @@ export class AppComponent implements OnInit {
     }
     this.getRecords();
     this.getRecordStats();
+  }
+
+  setCountriesFilter() {
+    for (const country of this.countries.america) {
+      this.countriesFilter.push({ group: 'America', country });
+    }
+    for (const country of this.countries.asia_oceania) {
+      this.countriesFilter.push({ group: 'Asia Oceania', country });
+    }
+    for (const country of this.countries.europe) {
+      this.countriesFilter.push({ group: 'Europe', country });
+    }
   }
 
   initializeForm() {
@@ -303,7 +318,7 @@ export class AppComponent implements OnInit {
 
   getRecordStats() {
     this.isLoading = true;
-    this.appService.getRecordStats().subscribe((data: any) => {
+    this.appService.getRecordStats(this.selectedCountries).subscribe((data: any) => {
       this.isLoading = false;
       this.drawChart(data.data);
     });
@@ -386,7 +401,9 @@ export class AppComponent implements OnInit {
   drawChart(data: any) {
     this.chart = new Chart({
         chart: {
-          type: 'column'
+          type: 'column',
+          width: 1000,
+          height: 500,
         },
         title: {
           text: 'Stats'
@@ -425,5 +442,18 @@ export class AppComponent implements OnInit {
     if (ev.nextId === 2) {
       // this.getRecordStats();
     }
+  }
+
+  onCountriesSelect() {
+    if (this.selectedCountries.includes('America')) {
+      this.selectedCountries.push(...this.countries.america);
+    }
+    if (this.selectedCountries.includes('Europe')) {
+      this.selectedCountries.push(...this.countries.europe);
+    }
+    if (this.selectedCountries.includes('Asia Oceania')) {
+      this.selectedCountries.push(...this.countries.asia_oceania);
+    }
+    this.getRecordStats();
   }
 }

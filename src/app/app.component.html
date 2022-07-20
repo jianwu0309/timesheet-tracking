@@ -514,6 +514,25 @@
       <a ngbNavLink>Stats</a>
       <ng-template ngbNavContent>
         <div class="row">
+          <div class="col-md-3 middle">
+            <label>Filter by Countries</label>
+          </div>
+          <div class="col-md-9">
+            <ng-select [(ngModel)]="selectedCountries" 
+              [items]="countriesFilter" (change)="onCountriesSelect()" 
+              [multiple]="true" placeholder="Select Countries"
+              [groupBy]="'group'"
+              [selectableGroup]="true"
+              bindValue="country"
+              bindLabel="country">
+              <ng-template ng-optgroup-tmp let-item="item" let-item$="item$" let-index="index">
+                <input id="item-{{index}}" type="checkbox" [ngModel]="item$.selected"/> {{item.group | uppercase}}
+              </ng-template>
+              <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
+                  <input id="item-{{index}}" type="checkbox" [ngModel]="item$.selected"/> {{item.country}}
+              </ng-template>
+          </ng-select>
+          </div>
           <div class="col-md-12">
             <div [chart]="chart"></div>
           </div>
