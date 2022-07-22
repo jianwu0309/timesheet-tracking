@@ -320,7 +320,17 @@ export class AppComponent implements OnInit {
     this.isLoading = true;
     this.appService.getRecordStats(this.selectedCountries).subscribe((data: any) => {
       this.isLoading = false;
-      this.drawChart(data.data);
+      const chartData = [];
+      const hashMap: any = {};
+      for (const d of data.data) {
+        hashMap[d.time] = d;
+      }
+      for (const time of this.times) {
+        if (hashMap[time]) {
+          chartData.push(hashMap[time]);
+        }
+      }
+      this.drawChart(chartData);
     });
   }
 
@@ -378,6 +388,7 @@ export class AppComponent implements OnInit {
       id: this.timesheetForm.controls['id'].value,
       clientTime: this.timesheetForm.controls['clientTime'].value,
       agencyTime: this.timesheetForm.controls['agencyTime'].value,
+      country: this.timesheetForm.controls['country'].value || null
     };
     this.appService.saveRecord(payload).subscribe(() => {
       this.isLoading = false;
