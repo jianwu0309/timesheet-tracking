@@ -217,7 +217,8 @@ export class AppComponent implements OnInit {
   filter = {
     limit: 20,
     offset: 0,
-    pageNo: 0,
+    pageNo: 1,
+    listPageNo: 1,
   };
   enableNextPage: boolean = true;
   active = 1;
@@ -284,6 +285,7 @@ export class AppComponent implements OnInit {
       this.records = data.data.records;
       this.isLoading = false;
       this.noRecords = !this.records.length;
+      this.filter.listPageNo = this.filter.pageNo;
     });
   }
 
@@ -301,6 +303,12 @@ export class AppComponent implements OnInit {
   previous() {
     this.filter.pageNo -= 1;
     this.filter.offset = this.filter.limit * this.filter.pageNo;
+    this.getRecords();
+  }
+
+  goToPageNo(pageNo: number) {
+    this.filter.pageNo = pageNo;
+    this.filter.offset = this.filter.limit * (this.filter.pageNo - 1);
     this.getRecords();
   }
 

@@ -6,6 +6,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgbNavModule } from '@ng-bootstrap/ng-bootstrap';
 import { ChartModule } from 'angular-highcharts';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { NgxPaginationModule } from 'ngx-pagination';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -24,7 +25,8 @@ import { AppService } from './app.service';
     HttpClientModule,
     ChartModule,
     NgbNavModule,
-    NgSelectModule
+    NgSelectModule,
+    NgxPaginationModule
   ],
   providers: [AppService],
   bootstrap: [AppComponent]
