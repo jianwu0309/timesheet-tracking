@@ -368,7 +368,15 @@
                       </select> -->
                     </td>
                     <td class="col-md-2">
-                      <select class="form-select" formControlName="country" aria-label="Default select example">
+                      <ng-select formControlName="country"
+                        [items]="countriesFilter"
+                        placeholder="Select Country"
+                        [groupBy]="'group'"
+                        [selectableGroup]="true"
+                        bindValue="country"
+                        bindLabel="country">
+                      </ng-select>
+                      <!-- <select class="form-select" formControlName="country" aria-label="Default select example">
                         <option selected value="" disabled="true">Country</option>
                         <optgroup label="America">
                           <option value="{{country}}" *ngFor="let country of countries.america">{{country}}</option>
@@ -379,7 +387,10 @@
                         <optgroup label="Europe">
                           <option value="{{country}}" *ngFor="let country of countries.europe">{{country}}</option>
                         </optgroup>
-                      </select>
+                        <optgroup label="Africa">
+                          <option value="{{country}}" *ngFor="let country of countries.africa">{{country}}</option>
+                        </optgroup>
+                      </select> -->
                     </td>
                     <td class="col-md-2">
                       <select class="form-select" formControlName="clientTimezone" (change)="selectTimezone()" aria-label="Default select example">
@@ -532,7 +543,7 @@
               <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
                   <input id="item-{{index}}" type="checkbox" [ngModel]="item$.selected"/> {{item.country}}
               </ng-template>
-          </ng-select>
+            </ng-select>
           </div>
           <div class="col-md-12">
             <div [chart]="chart"></div>

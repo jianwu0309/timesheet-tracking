@@ -203,6 +203,9 @@ export class AppComponent implements OnInit {
       'Switzerland',
       'Ireland',
       'Iceland',
+    ],
+    africa: [
+      'Africa'
     ]
   }
   timesheetForm: FormGroup;
@@ -230,6 +233,7 @@ export class AppComponent implements OnInit {
     this.timesheetForm.controls['clientTime'].disable({ onlySelf: false });
     this.timesheetForm.controls['agencyTime'].disable({ onlySelf: false });
     this.setCountriesFilter();
+    this.selectTimezone();
   }
 
   ngOnInit(): void {
@@ -250,31 +254,37 @@ export class AppComponent implements OnInit {
     for (const country of this.countries.europe) {
       this.countriesFilter.push({ group: 'Europe', country });
     }
+    this.countriesFilter.push({ group: 'Africa', country: 'Africa' });
   }
 
   initializeForm() {
+    let data: any = localStorage.getItem('data');
+    if (data) {
+      data = JSON.parse(data);
+    }
     return new FormGroup({
       id: new FormControl(),
-      developerTime: new FormControl(''),
-      developerTimezone: new FormControl(''),
-      clientTime: new FormControl(''),
-      clientTimezone: new FormControl(''),
-      agencyTime: new FormControl(''),
-      agencyTimezone: new FormControl(10),
-      country: new FormControl(''),
+      developerTime: new FormControl(data && data.developerTime || ''),
+      developerTimezone: new FormControl(data && data.developerTimezone || ''),
+      clientTime: new FormControl(data && data.clientTime || ''),
+      clientTimezone: new FormControl(data && data.clientTimezone || ''),
+      agencyTime: new FormControl(data && data.agencyTime || ''),
+      agencyTimezone: new FormControl(data && data.agencyTime || 10),
+      country: new FormControl(data && data.country || undefined),
     });
   }
 
   reset() {
     this.timesheetForm.setValue({
+      ...this.timesheetForm.value,
       id: null,
       developerTime: '',
-      developerTimezone: '',
+      // developerTimezone: '',
       clientTime: '',
-      clientTimezone: '',
+      // clientTimezone: '',
       agencyTime: '',
       agencyTimezone: 10,
-      country: ''
+      // country: ''
     })
   }
 
@@ -402,8 +412,14 @@ export class AppComponent implements OnInit {
       this.isLoading = false;
       this.getRecords();
       this.getRecordStats();
+      this.saveInLocalStorage();
       this.reset();
     });
+  }
+
+  saveInLocalStorage() {
+    const data = this.timesheetForm.value;
+    localStorage.setItem('data', JSON.stringify(data));
   }
 
   deleteRecord(id: number) {
