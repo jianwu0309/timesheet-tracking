@@ -270,6 +270,9 @@
   .middle {
     vertical-align: middle;
   }
+  .right {
+    text-align: right;
+  }
 
   /* Responsive Styles */
   @media screen and (max-width: 767px) {
@@ -486,6 +489,7 @@
               </tbody>
             </table>
             <nav>
+              Total Record: {{totalRecords}}
               <pagination-controls class="pagination" *ngIf="records.length" (pageChange)="goToPageNo($event)"></pagination-controls>
               <!-- <ul class="pagination" *ngIf="records.length">
                   <li class="page-item">
@@ -526,10 +530,10 @@
       <a ngbNavLink>Stats</a>
       <ng-template ngbNavContent>
         <div class="row">
-          <div class="col-md-3 middle">
+          <div class="col-md-2 middle">
             <label>Filter by Countries</label>
           </div>
-          <div class="col-md-9">
+          <div class="col-md-8">
             <ng-select [(ngModel)]="selectedCountries" 
               [items]="countriesFilter" (change)="onCountriesSelect()" 
               [multiple]="true" placeholder="Select Countries"
@@ -544,6 +548,9 @@
                   <input id="item-{{index}}" type="checkbox" [ngModel]="item$.selected"/> {{item.country}}
               </ng-template>
             </ng-select>
+          </div>
+          <div class="col-md-2 right">
+            Total Record: {{totalRecords}}
           </div>
           <div class="col-md-12">
             <div [chart]="chart"></div>
