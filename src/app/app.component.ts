@@ -266,11 +266,11 @@ export class AppComponent implements OnInit {
       id: new FormControl(),
       developerTime: new FormControl(data && data.developerTime || ''),
       developerTimezone: new FormControl(data && data.developerTimezone || ''),
-      clientTime: new FormControl(data && data.clientTime || ''),
-      clientTimezone: new FormControl(data && data.clientTimezone || ''),
-      agencyTime: new FormControl(data && data.agencyTime || ''),
-      agencyTimezone: new FormControl(data && data.agencyTime || 10),
-      country: new FormControl(data && data.country || undefined),
+      clientTime: new FormControl(''),
+      clientTimezone: new FormControl(''),
+      agencyTime: new FormControl(''),
+      agencyTimezone: new FormControl(10),
+      country: new FormControl(undefined),
     });
   }
 
