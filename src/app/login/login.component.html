@@ -1,0 +1,80 @@
+<div class="content" role="main"> 
+    <div class="wrapper wrapper-full-page">
+    <div class="page-header login-page header-filter" filter-color="black" style="background-image: url('./assets/img/bg.png'); background-size: cover; background-position: top center;">
+      <!--   you can change the color of the filter page using: data-color="blue | purple | green | orange | red | rose " -->
+      <div class="container">
+        <div class="row">
+            <div class="col-lg-4"></div>
+          <div class="col-lg-4 col-md-6 col-sm-6 ml-auto mr-auto">
+            <form [formGroup]="loginForm" (submit)="onSubmit()">
+              <div class="card card-login">
+                <div class="card-header card-header-rose text-center">
+                  <h4 class="card-title">Log In</h4>
+                  <!-- <div class="social-line">
+                    <a href="#pablo" class="btn btn-just-icon btn-link btn-white">
+                      <i class="fa fa-facebook-square"></i>
+                    </a>
+                    <a href="#pablo" class="btn btn-just-icon btn-link btn-white">
+                      <i class="fa fa-twitter"></i>
+                    </a>
+                    <a href="#pablo" class="btn btn-just-icon btn-link btn-white">
+                      <i class="fa fa-google-plus"></i>
+                    </a>
+                  </div> -->
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-12 control">
+                            <div class="alert alert-danger" *ngIf="!isLoading && isError">
+                                Invalid Username or Password
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12 control">
+                            <span class="form-group">
+                                <div class="input-group">
+                                  <div class="input-group-prepend">
+                                    <span class="input-group-text">
+                                      Email:
+                                    </span>
+                                  </div>
+                                  <input type="email" formControlName="email" class="form-control" placeholder="Email..."
+                                    [ngClass]="{'is-invalid': loginForm.get('email')?.errors && loginForm.get('email')?.touched}">
+                                </div>
+                              </span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12 control">
+                            <span class="form-group">
+                                <div class="input-group">
+                                  <div class="input-group-prepend">
+                                    <span class="input-group-text">
+                                      Password:
+                                    </span>
+                                  </div>
+                                  <input type="password" value="" formControlName="password"
+                                    [ngClass]="{'is-invalid': loginForm.get('password')?.errors && loginForm.get('password')?.touched}"
+                                      class="form-control" placeholder="******************">
+                                </div>
+                              </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer justify-content-center">
+                  <button type="submit" class="btn btn-primary px-4" [disabled]="isLoading || !loginForm.valid">
+                    Log In
+                  </button>
+                  <div class="spinner-border" role="status" *ngIf="isLoading">
+                    <span class="sr-only"></span>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>  
+</div>

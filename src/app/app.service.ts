@@ -1,15 +1,25 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
+import { UserService } from './user.service';
 
 @Injectable()
 export class AppService {
     private baseUrl = environment.baseUrl;
-    constructor(private http: HttpClient) {}
+    constructor(private http: HttpClient, private userService: UserService) {}
+
+    signIn(body: any): Promise<any> {
+        const url = `${this.baseUrl}/auth/login`;
+        return this.http.post(url, body).toPromise();
+    }
 
     getRecords(filter: any) {
         const url = `${this.baseUrl}/timesheet?limit=${filter.limit}&offset=${filter.offset}`;
-        return this.http.get(url);
+        return this.http.get(url, {
+            headers: {
+                authorization: this.userService.getToken() || ''
+            }
+        });
     }
 
     getRecordStats(countries: string[]) {
@@ -17,16 +27,28 @@ export class AppService {
         if (countries.length) {
             url += `?countries=${countries.join(',')}`;
         }
-        return this.http.get(url);
+        return this.http.get(url, {
+            headers: {
+                authorization: this.userService.getToken() || ''
+            }
+        });
     }
 
     saveRecord(payload: any) {
         const url = `${this.baseUrl}/timesheet`;
-        return this.http.post(url, payload);
+        return this.http.post(url, payload, {
+            headers: {
+                authorization: this.userService.getToken() || ''
+            }
+        });
     }
 
     deleteRecord(id: number) {
         const url = `${this.baseUrl}/timesheet/${id}`;
-        return this.http.delete(url);
+        return this.http.delete(url, {
+            headers: {
+                authorization: this.userService.getToken() || ''
+            }
+        });
     }
 }

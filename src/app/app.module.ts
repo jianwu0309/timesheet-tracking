@@ -11,10 +11,15 @@ import { NgxPaginationModule } from 'ngx-pagination';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { AppService } from './app.service';
+import { LoginComponent } from './login/login.component';
+import { DashboardComponent } from './dashboard/dashboard.component';
+import { UserService } from './user.service';
 
 @NgModule({
   declarations: [
     AppComponent,
+    LoginComponent,
+    DashboardComponent
   ],
   imports: [
     BrowserModule,
@@ -28,7 +33,7 @@ import { AppService } from './app.service';
     NgSelectModule,
     NgxPaginationModule
   ],
-  providers: [AppService],
+  providers: [AppService, UserService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
