@@ -404,7 +404,8 @@ export class AppComponent implements OnInit {
     const payload = {
       ...this.timesheetForm.value,
       id: this.timesheetForm.controls['id'].value,
-      clientTime: this.timesheetForm.controls['clientTime'].value,
+      clientTime: this.timesheetForm.controls['clientTime'].value || null,
+      clientTimezone: this.timesheetForm.controls['clientTimezone'].value || null,
       agencyTime: this.timesheetForm.controls['agencyTime'].value,
       country: this.timesheetForm.controls['country'].value || null
     };
