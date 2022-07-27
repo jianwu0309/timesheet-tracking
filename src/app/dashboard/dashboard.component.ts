@@ -504,6 +504,21 @@ export class DashboardComponent implements OnInit {
     if (this.selectedCountries.includes('Asia Oceania')) {
       this.selectedCountries.push(...this.countries.asia_oceania);
     }
+    if (this.selectedCountries.includes('Africa')) {
+      this.selectedCountries.push(...this.countries.africa);
+    }
+    if (!this.selectedCountries.includes('America') && this.countries.america.every(country => this.selectedCountries.includes(country))) {
+      this.selectedCountries = [...this.selectedCountries, 'America'];
+    }
+    if (!this.selectedCountries.includes('Europe') && this.countries.europe.every(country => this.selectedCountries.includes(country))) {
+      this.selectedCountries = [...this.selectedCountries, 'Europe'];
+    }
+    if (!this.selectedCountries.includes('Asia Oceania') && this.countries.asia_oceania.every(country => this.selectedCountries.includes(country))) {
+      this.selectedCountries = [...this.selectedCountries, 'Asia Oceania'];
+    }
+    if (!this.selectedCountries.includes('Africa') && this.countries.africa.every(country => this.selectedCountries.includes(country))) {
+      this.selectedCountries = [...this.selectedCountries, 'Africa'];
+    }
     this.getRecordStats();
   }
 }
