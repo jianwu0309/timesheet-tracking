@@ -180,6 +180,7 @@ export class DashboardComponent implements OnInit {
     america: [
       'Canada',
       'United States',
+      'Other - America'
     ],
     asia_oceania: [
       'Australia',
@@ -190,7 +191,8 @@ export class DashboardComponent implements OnInit {
       'Saudi Arabia',
       'Japan',
       'New Zealand',
-      'Israel'
+      'Israel',
+      'Other - Asia Oceania'
     ],
     europe: [
       'Norway',
@@ -205,9 +207,10 @@ export class DashboardComponent implements OnInit {
       'Switzerland',
       'Ireland',
       'Iceland',
+      'Other - Europe'
     ],
     africa: [
-      'Africa'
+      'Other - Africa'
     ]
   }
   timesheetForm: FormGroup;
@@ -260,7 +263,9 @@ export class DashboardComponent implements OnInit {
     for (const country of this.countries.europe) {
       this.countriesFilter.push({ group: 'Europe', country });
     }
-    this.countriesFilter.push({ group: 'Africa', country: 'Africa' });
+    for (const country of this.countries.africa) {
+      this.countriesFilter.push({ group: 'Africa', country });
+    }
   }
 
   initializeForm() {
@@ -506,18 +511,6 @@ export class DashboardComponent implements OnInit {
     }
     if (this.selectedCountries.includes('Africa')) {
       this.selectedCountries.push(...this.countries.africa);
-    }
-    if (!this.selectedCountries.includes('America') && this.countries.america.every(country => this.selectedCountries.includes(country))) {
-      this.selectedCountries = [...this.selectedCountries, 'America'];
-    }
-    if (!this.selectedCountries.includes('Europe') && this.countries.europe.every(country => this.selectedCountries.includes(country))) {
-      this.selectedCountries = [...this.selectedCountries, 'Europe'];
-    }
-    if (!this.selectedCountries.includes('Asia Oceania') && this.countries.asia_oceania.every(country => this.selectedCountries.includes(country))) {
-      this.selectedCountries = [...this.selectedCountries, 'Asia Oceania'];
-    }
-    if (!this.selectedCountries.includes('Africa') && this.countries.africa.every(country => this.selectedCountries.includes(country))) {
-      this.selectedCountries = [...this.selectedCountries, 'Africa'];
     }
     this.getRecordStats();
   }
