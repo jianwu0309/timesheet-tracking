@@ -37,6 +37,7 @@
                 <table class="table">
                   <thead>
                     <tr>
+                      <td scope="col">Date</td>
                       <th scope="col" colspan="2">Developer</th>
                       <th scope="col" colspan="3">Client</th>
                       <th scope="col" colspan="2">Me</th>
@@ -45,6 +46,9 @@
                   </thead>
                   <tbody>
                     <tr>
+                      <td>
+                        <input class="form-control" type="date" formControlName="date" />
+                      </td>
                       <td class="col-md-2">
                         <select class="form-select" formControlName="developerTime" (change)="selectTimezone()" aria-label="Default select example">
                           <option selected value="" disabled="true">Time</option>
@@ -121,8 +125,9 @@
                 <thead>
                   <tr>
                     <th scope="col"></th>
+                    <th scope="col"></th>
                     <th scope="col" colspan="2">Developer</th>
-                    <th scope="col" colspan="2">Client</th>
+                    <th scope="col" colspan="3">Client</th>
                     <th scope="col" colspan="2">Me</th>
                     <th scope="col">
                       <!-- <select class="form-select" [(ngModel)]="filter.limit" aria-label="Default select example">
@@ -134,11 +139,12 @@
                   </tr>
                   <tr>
                     <th scope="col">#</th>
-                    <th scope="col">Developer Time</th>
-                    <th scope="col">Developer Time Zone</th>
-                    <th scope="col">Client Time</th>
-                    <th scope="col">Client Country</th>
-                    <th scope="col">Client Time Zone</th>
+                    <th scope="col">Date</th>
+                    <th scope="col">Time</th>
+                    <th scope="col">Time Zone</th>
+                    <th scope="col">Time</th>
+                    <th scope="col">Country</th>
+                    <th scope="col">Time Zone</th>
                     <th scope="col">My Time</th>
                     <th scope="col">My Time Zone</th>
                   </tr>
@@ -150,12 +156,15 @@
                   <tr *ngFor="let record of records | paginate: { itemsPerPage: filter.limit, currentPage: filter.pageNo, totalItems: totalRecords }; let i = index">
                     <th scope="row">{{ (i + ((filter.listPageNo - 1) * filter.limit)) + 1 }}</th>
                     <td class="col-md-2">
+                      {{record.date | date: 'EEE, MMMM d, y'}}
+                    </td>
+                    <td class="col-md-1">
                       {{record.developerTime}}
                     </td>
                     <td class="col-md-2">
                       {{timezoneHashMap[record.developerTimezone]}}
                     </td>
-                    <td class="col-md-2">
+                    <td class="col-md-1">
                       {{record.clientTime}}
                     </td>
                     <td class="col-md-2">

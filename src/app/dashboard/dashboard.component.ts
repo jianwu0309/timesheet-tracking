@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { Chart } from 'angular-highcharts';
 import { UserService } from '../user.service';
 import { AppService } from './../app.service';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-dashboard',
@@ -275,6 +276,7 @@ export class DashboardComponent implements OnInit {
     }
     return new FormGroup({
       id: new FormControl(),
+      date: new FormControl(moment().format('yyyy-MM-DD')),
       developerTime: new FormControl(data && data.developerTime || ''),
       developerTimezone: new FormControl(data && data.developerTimezone || ''),
       clientTime: new FormControl(''),
@@ -289,6 +291,7 @@ export class DashboardComponent implements OnInit {
     this.timesheetForm.setValue({
       ...this.timesheetForm.value,
       id: null,
+      date: moment().format('yyyy-MM-DD'),
       developerTime: '',
       // developerTimezone: '',
       clientTime: '',
@@ -408,6 +411,7 @@ export class DashboardComponent implements OnInit {
   editRecord(record: any) {
     this.timesheetForm.setValue({
       id: record.id,
+      date: record.date,
       developerTime: record.developerTime,
       developerTimezone: record.developerTimezone,
       clientTime: record.clientTime,
