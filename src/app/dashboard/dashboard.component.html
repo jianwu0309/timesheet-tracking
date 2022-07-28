@@ -174,7 +174,7 @@
                       {{timezoneHashMap[record.clientTimezone]}}
                     </td>
                     <td class="col-md-2">
-                      {{record.agencyTime}}
+                      {{record.agencyDate | date: 'EEE'}} {{record.agencyTime}}
                     </td>
                     <td class="col-md-2">
                       {{timezoneHashMap[record.agencyTimezone]}}

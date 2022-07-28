@@ -440,7 +440,8 @@ export class DashboardComponent implements OnInit {
       clientTime: this.timesheetForm.controls['clientTime'].value || null,
       clientTimezone: this.timesheetForm.controls['clientTimezone'].value || null,
       agencyTime: this.timesheetForm.controls['agencyTime'].value,
-      country: this.timesheetForm.controls['country'].value || null
+      country: this.timesheetForm.controls['country'].value || null,
+      agencyDate: this.calculateAgencyDate()
     };
     this.appService.saveRecord(payload).subscribe(() => {
       this.isLoading = false;
@@ -449,6 +450,24 @@ export class DashboardComponent implements OnInit {
       this.saveInLocalStorage();
       this.reset();
     });
+  }
+
+  calculateAgencyDate() {
+    let newDate;
+    const date = this.timesheetForm.controls['date'].value;
+    const developerTime = this.timesheetForm.controls['developerTime'].value;
+    const developerTimeHour = +developerTime.split('-')[0];
+    const developerTimeZone = this.timesheetForm.controls['developerTimezone'].value;
+
+    const agencyTimeZone = this.timesheetForm.controls['agencyTimezone'].value;
+    const differenceAgency = agencyTimeZone - developerTimeZone;
+    let selectedTimeZoneAgency = Math.floor(+developerTimeHour + differenceAgency);
+    if (selectedTimeZoneAgency >= 24) {
+      newDate = moment(date).add(1, 'day');
+    } else if (selectedTimeZoneAgency < 0) {
+      newDate = moment(date).add(-1, 'day');
+    }
+    return newDate?.format('yyyy-MM-DD');
   }
 
   saveInLocalStorage() {
