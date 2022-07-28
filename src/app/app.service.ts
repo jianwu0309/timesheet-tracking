@@ -34,6 +34,18 @@ export class AppService {
         });
     }
 
+    getRecordStatsByDays(countries: string[]) {
+        let url = `${this.baseUrl}/timesheet/stats/days`;
+        if (countries.length) {
+            url += `?countries=${countries.join(',')}`;
+        }
+        return this.http.get(url, {
+            headers: {
+                authorization: this.userService.getToken() || ''
+            }
+        });
+    }
+
     saveRecord(payload: any) {
         const url = `${this.baseUrl}/timesheet`;
         return this.http.post(url, payload, {

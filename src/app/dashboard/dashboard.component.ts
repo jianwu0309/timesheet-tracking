@@ -220,6 +220,7 @@ export class DashboardComponent implements OnInit {
   isLoading: boolean = false;
   noRecords: boolean = false;
   chart: any;
+  daysChart: any;
   totalRecords = 0;
   minShowingRecords = 0;
   maxShowingRecords = 0;
@@ -366,7 +367,16 @@ export class DashboardComponent implements OnInit {
           chartData.push(hashMap[time]);
         }
       }
-      this.drawChart(chartData);
+      this.drawChart(chartData, false);
+    }, (err: any) => {
+      if (err.status === 401) {
+        this.router.navigate(['login']);
+      }
+    });
+
+    this.appService.getRecordStatsByDays(this.selectedCountries).subscribe((data: any) => {
+      this.isLoading = false;
+      this.drawChart(data.data, true);
     }, (err: any) => {
       if (err.status === 401) {
         this.router.navigate(['login']);
@@ -457,18 +467,33 @@ export class DashboardComponent implements OnInit {
     }
   }
 
-  drawChart(data: any) {
-    this.chart = new Chart({
-        chart: {
-          type: 'column',
-          width: 1000,
-          height: 500,
-        },
+  drawChart(data: any, days: boolean = false) {
+    const options = {
+      chart: {
+        type: 'column',
+        width: 1000,
+        height: 500,
+      },
+      
+      credits: {
+        enabled: false
+      },
+      yAxis: {
+          min: 0,
+          allowDecimals: false,
+          title: {
+              text: ''
+          },
+          labels: {
+              overflow: 'justify'
+          }
+      },
+    }
+    if (!days) {
+      this.chart = new Chart({
+        ...options,
         title: {
-          text: 'Stats'
-        },
-        credits: {
-          enabled: false
+          text: 'Stats by time'
         },
         xAxis: {
           categories: data.map((d: any) => d.time),
@@ -494,7 +519,39 @@ export class DashboardComponent implements OnInit {
               enabled: true
             }
         }]
-    });
+      });
+    } else {
+      this.daysChart = new Chart({
+        ...options,
+        title: {
+          text: 'Stats by days'
+        },
+        xAxis: {
+          categories: data.map((d: any) => d.day),
+          title: {
+              text: null
+          }
+        },
+        yAxis: {
+            min: 0,
+            allowDecimals: false,
+            title: {
+                text: ''
+            },
+            labels: {
+                overflow: 'justify'
+            }
+        },
+        series: [{
+            name: 'Timeslots',
+            type: 'column',
+            data: data.map((d: any) => +d.count),
+            dataLabels: {
+              enabled: true
+            }
+        }]
+      });
+    }
   }
 
   navChange(ev: any) {
