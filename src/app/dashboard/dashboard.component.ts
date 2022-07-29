@@ -466,6 +466,8 @@ export class DashboardComponent implements OnInit {
       newDate = moment(date).add(1, 'day');
     } else if (selectedTimeZoneAgency < 0) {
       newDate = moment(date).add(-1, 'day');
+    } else {
+      newDate = moment(date);
     }
     return newDate?.format('yyyy-MM-DD');
   }
