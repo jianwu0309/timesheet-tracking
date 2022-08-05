@@ -27,7 +27,7 @@
     
     </div>
   
-    <ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-tabs" (navChange)="navChange($event)">
+    <ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-tabs">
       <li [ngbNavItem]="1">
         <a ngbNavLink>Data</a>
         <ng-template ngbNavContent>
@@ -260,6 +260,29 @@
             </div>
             <div class="col-md-12">
               <div [chart]="daysChart"></div>
+            </div>
+            <div *ngIf="daysSlotsChart">
+              <div class="col-md-12">
+                <div [chart]="daysSlotsChart[0]"></div>
+              </div>
+              <div class="col-md-12">
+                <div [chart]="daysSlotsChart[1]"></div>
+              </div>
+              <div class="col-md-12">
+                <div [chart]="daysSlotsChart[2]"></div>
+              </div>
+              <div class="col-md-12">
+                <div [chart]="daysSlotsChart[3]"></div>
+              </div>
+              <div class="col-md-12">
+                <div [chart]="daysSlotsChart[4]"></div>
+              </div>
+              <div class="col-md-12">
+                <div [chart]="daysSlotsChart[5]"></div>
+              </div>
+              <div class="col-md-12">
+                <div [chart]="daysSlotsChart[6]"></div>
+              </div>
             </div>
           </div>
         </ng-template>

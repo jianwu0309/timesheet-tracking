@@ -5,6 +5,7 @@ import { Chart } from 'angular-highcharts';
 import { UserService } from '../user.service';
 import { AppService } from './../app.service';
 import * as moment from 'moment';
+import { forkJoin } from 'rxjs/internal/observable/forkJoin';
 
 @Component({
   selector: 'app-dashboard',
@@ -221,6 +222,7 @@ export class DashboardComponent implements OnInit {
   noRecords: boolean = false;
   chart: any;
   daysChart: any;
+  daysSlotsChart: any = {};
   totalRecords = 0;
   minShowingRecords = 0;
   maxShowingRecords = 0;
@@ -234,6 +236,15 @@ export class DashboardComponent implements OnInit {
   active = 1;
   selectedCountries: string[] = [];
   countriesFilter: any = [];
+  daysDisplay: any = {
+    0: 'Sunday', 
+    1: 'Monday',
+    2: 'Tuesday',
+    3: 'Wednesday',
+    4: 'Thursday',
+    5: 'Friday',
+    6: 'Saturday'
+  }
 
   constructor(private appService: AppService, private router: Router, private userService: UserService) {
     this.timesheetForm = this.initializeForm();
@@ -380,6 +391,27 @@ export class DashboardComponent implements OnInit {
     }, (err: any) => {
       if (err.status === 401) {
         this.router.navigate(['login']);
+      }
+    });
+
+    const promises = [];
+    for (let i = 0; i <= 6; i++) {
+      promises.push(this.appService.getRecordSlotStatsByDays(this.selectedCountries, i));
+    }
+    forkJoin(promises).subscribe((response) => {
+      const res: any = response;
+      for (let i = 0; i <= 6; i++) {
+        const chartData = [];
+        const hashMap: any = {};
+        for (const d of res[i].data) {
+          hashMap[d.time] = d;
+        }
+        for (const time of this.times) {
+          if (hashMap[time]) {
+            chartData.push(hashMap[time]);
+          }
+        }
+        this.drawChartByDays(chartData, i);
       }
     });
   }
@@ -575,10 +607,58 @@ export class DashboardComponent implements OnInit {
     }
   }
 
-  navChange(ev: any) {
-    if (ev.nextId === 2) {
-      // this.getRecordStats();
+  drawChartByDays(data: any, day: number) {
+    const options = {
+      chart: {
+        type: 'column',
+        width: 1000,
+        height: 500,
+      },
+      
+      credits: {
+        enabled: false
+      },
+      yAxis: {
+          min: 0,
+          allowDecimals: false,
+          title: {
+              text: ''
+          },
+          labels: {
+              overflow: 'justify'
+          }
+      },
     }
+    this.daysSlotsChart[day] = new Chart({
+      ...options,
+      title: {
+        text: `${this.daysDisplay[day]} Time Slots Stats`
+      },
+      xAxis: {
+        categories: data.map((d: any) => d.time),
+        title: {
+            text: null
+        }
+      },
+      yAxis: {
+          min: 0,
+          allowDecimals: false,
+          title: {
+              text: ''
+          },
+          labels: {
+              overflow: 'justify'
+          }
+      },
+      series: [{
+          name: 'Timeslots',
+          type: 'column',
+          data: data.map((d: any) => +d.count),
+          dataLabels: {
+            enabled: true
+          }
+      }]
+    });
   }
 
   onCountriesSelect() {

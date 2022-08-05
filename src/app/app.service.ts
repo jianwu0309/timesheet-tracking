@@ -46,6 +46,18 @@ export class AppService {
         });
     }
 
+    getRecordSlotStatsByDays(countries: string[], day: number) {
+        let url = `${this.baseUrl}/timesheet/stats/days-timeslot?day=${day}`;
+        if (countries.length) {
+            url += `&countries=${countries.join(',')}`;
+        }
+        return this.http.get(url, {
+            headers: {
+                authorization: this.userService.getToken() || ''
+            }
+        });
+    }
+
     saveRecord(payload: any) {
         const url = `${this.baseUrl}/timesheet`;
         return this.http.post(url, payload, {
